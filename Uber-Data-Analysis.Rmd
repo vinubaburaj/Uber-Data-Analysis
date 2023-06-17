@@ -1,0 +1,27 @@
+---
+title: "Uber-Data-Analysis"
+author: "Vinu Baburaj"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r LoadPackages}
+# Package names required for this project
+
+packages <- c('ggplot2','tidyverse')
+
+# Install packages not yet installed
+installed_packages <- packages %in% rownames(installed.packages())
+if (any(installed_packages == FALSE)) {
+  install.packages(packages[!installed_packages])
+}
+
+# Loading Packages
+invisible(lapply(packages, library, character.only = TRUE))
+```
+```{r}
+
+
+```
+
+
