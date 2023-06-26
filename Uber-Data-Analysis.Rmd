@@ -43,4 +43,23 @@ data <- rbind(apr,may, jun, jul, aug, sep)
 ```
 
 
+```{r}
+head(data)
+tail(data)
+```
+
+
+```{r}
+data$`Date/Time` <- strptime(data$`Date/Time`, "%m/%d/%Y %H:%M:%S")
+```
+
+Separate column for Day, Month and Hour 
+
+```{r}
+data$Day <- as.numeric(format(data$`Date/Time`, format="%d"))
+data$Month <- as.numeric(format(data$`Date/Time`, format="%m"))
+data$Hour <- as.numeric(format(data$`Date/Time`, format="%H"))
+```
+
+
 
