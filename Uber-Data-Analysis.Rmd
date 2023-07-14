@@ -5,7 +5,10 @@ date: "`r Sys.Date()`"
 output: html_document
 ---
 
-```{r LoadPackages}
+
+Loading required packages for this project
+
+```{r LoadPackages, warning=FALSE, message=FALSE}
 # Package names required for this project
 
 packages <- c('ggplot2','tidyverse')
@@ -19,7 +22,11 @@ if (any(installed_packages == FALSE)) {
 # Loading Packages
 invisible(lapply(packages, library, character.only = TRUE))
 ```
-```{r ReadCSV}
+
+
+Reading dataset csv files
+
+```{r ReadCSV, warning=FALSE, message=FALSE}
 apr <- read_csv("dataset/uber-raw-data-apr14.csv")
 may <- read_csv("dataset/uber-raw-data-may14.csv")
 jun <- read_csv("dataset/uber-raw-data-jun14.csv")
@@ -28,6 +35,8 @@ aug <- read_csv("dataset/uber-raw-data-aug14.csv")
 sep <- read_csv("dataset/uber-raw-data-sep14.csv")
 ```
 
+
+Understanding fields in data
 
 ```{r CheckData}
 head(apr)
@@ -38,28 +47,61 @@ head(aug)
 head(sep)
 ```
 
+
+Merging all month's data into a single data frame
+
 ```{r JoinData}
 data <- rbind(apr,may, jun, jul, aug, sep)
 ```
 
+
+Checking the first and last few rows of merged data
 
 ```{r}
 head(data)
 tail(data)
 ```
 
+Converting Date/Time column to a datetime object
 
 ```{r}
 data$`Date/Time` <- strptime(data$`Date/Time`, "%m/%d/%Y %H:%M:%S")
 ```
 
-Separate column for Day, Month and Hour 
+Separating column for Day, Month, Month in words and Hour 
 
 ```{r}
 data$Day <- as.numeric(format(data$`Date/Time`, format="%d"))
 data$Month <- as.numeric(format(data$`Date/Time`, format="%m"))
+data$MonthAbbr <- (format(data$`Date/Time`, format="%b"))
 data$Hour <- as.numeric(format(data$`Date/Time`, format="%H"))
 ```
 
 
+ Analyzing which month has the highest Uber rides booked:
 
+```{r}
+ggplot(data, aes(x=reorder(MonthAbbr,Month), fill=MonthAbbr))+
+  geom_bar(color="black")+
+  labs(x="Month",y="No. of Rides")+
+  theme_minimal()
+```
+
+Analyzing which days have the most Uber rides booked:
+
+```{r}
+ggplot(data, aes(x=Day))+
+  geom_bar()+
+  labs(y="No. of Rides")+
+  theme_minimal()
+```
+
+Analyzing the trends of Uber rides booked for each month:
+
+```{r}
+ggplot(data, aes(x=Day))+
+  geom_bar()+
+  labs(y="No. of Rides every month", x="Month")+
+  theme_minimal()+
+  facet_wrap(~MonthAbbr)
+```
